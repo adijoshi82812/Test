@@ -1,29 +1,30 @@
-let request = require("request")
+// let request = require("request")
+let axios = require('axios');
 
-exports.myExternalAdapter = (req, res) => {
-  const url = "https://50f2207a-1fe5-4710-a7a1-a20dfb8abbb5.mock.pstmn.io/vaneckholding"
+exports.myExternalAdapter = async () => {
+//   let options = {
+//     url: url,
+//     json: true,
+//   }
 
-  let options = {
-    url: url,
-    json: true,
-  }
+  return await axios.get("https://50f2207a-1fe5-4710-a7a1-a20dfb8abbb5.mock.pstmn.io/vaneckholding");
 
-  request(options, (error, response, body) => {
-    if (error || response.statusCode >= 400) {
-      let errorData = {
-        jobRunID: req.id,
-        status: "errored",
-        error: body,
-      }
-      res.status(response.statusCode).send(errorData);
-    } else {
-      let returnData = {
-        jobRunID: req.id,
-        data: body,
-      }
-      res.status(response.statusCode).send(returnData);
-    }
-  })
+//   request(options, (error, response, body) => {
+//     if (error || response.statusCode >= 400) {
+//       let errorData = {
+//         jobRunID: req.id,
+//         status: "errored",
+//         error: body,
+//       }
+//       return errorData;
+//     } else {
+//       let returnData = {
+//         jobRunID: req.id,
+//         data: body,
+//       }
+//       return returnData;
+//     }
+//   })
 }
 
 
@@ -35,6 +36,8 @@ exports.handler = (req, res) => {
 
 //@dev For Lambda Implementation
 //on AWS v2
-exports.handlerv2 = (req, res) => {
-    this.myExternalAdapter(req, res);
+exports.handlerv2 = async (req, res) => {
+    const response = await this.myExternalAdapter();
+    console.log(response);
+    res.status(200).send(response.data);
 }
