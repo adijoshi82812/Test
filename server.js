@@ -36,8 +36,8 @@ exports.handler = (req, res) => {
 
 //@dev For Lambda Implementation
 //on AWS v2
-exports.handlerv2 = async (req, res) => {
+exports.handlerv2 = async (event, callback) => {
     const response = await this.myExternalAdapter();
-    console.log(response);
-    res.status(200).send(response.data);
+    
+    callback(null, response.data);
 }
